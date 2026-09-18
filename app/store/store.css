@@ -1,0 +1,1716 @@
+/* The 3D shop page. The base tokens — warm paper, hairline borders, one burnt-orange
+   accent, the fixture hues — come from app/globals.css; the --store-* set below adds the
+   stage, the translucent overlay, the good/bad/warn/info colours and the timeline bands.
+   The stage background matches lib/three/palette.ts THEMES, so the canvas blends into its
+   frame instead of sitting in a box.
+
+   At 1000 px and wider the page is an app: it fills the viewport (100dvh, no page scroll),
+   the stage takes every pixel the top bar and the timeline leave, and the HUD, the clock,
+   the ticker and the minimap float over it in flex stacks. Below 1000 px it is a document
+   again: single column, 16 px gutters, the side panel a bottom sheet. */
+
+:root {
+  --store-stage: #e9eef3;
+  --store-overlay: rgba(255, 255, 255, 0.88);
+  --store-overlay-line: rgba(29, 29, 27, 0.12);
+  --store-good: #2f9e44;
+  --store-bad: #e03131;
+  --store-warn: #f08c00;
+  --store-info: #1c7ed6;
+  /* Text-safe darks of warn and info (4.6:1 and 5.9:1 on white), for anywhere the colour
+     carries text or sits under white text. The bright pair stays for bars and bands. */
+  --store-warn-text: #b35c00;
+  --store-info-text: #1864ab;
+  --store-quiet: rgba(120, 120, 110, 0.14);
+  --store-open: rgba(240, 140, 0, 0.1);
+  --store-shift: rgba(28, 126, 214, 0.35);
+  --store-playhead: #d9480f;
+  --store-gap: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --store-stage: #15171b;
+    --store-overlay: rgba(30, 30, 28, 0.88);
+    --store-overlay-line: rgba(236, 235, 230, 0.14);
+    /* On the dark overlay the bright pair already reads; keep them. */
+    --store-warn-text: #f08c00;
+    --store-info-text: #4dabf7;
+    --store-quiet: rgba(160, 160, 150, 0.12);
+    --store-open: rgba(240, 140, 0, 0.12);
+    --store-shift: rgba(77, 171, 247, 0.4);
+  }
+}
+
+main.store-main {
+  max-width: none;
+  margin: 0;
+  padding: 10px 16px 28px;
+}
+
+.store-app {
+  display: flex;
+  flex-direction: column;
+  gap: var(--store-gap);
+  min-height: 0;
+}
+
+/* ---------- top bar ---------- */
+
+.store-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  min-height: 36px;
+  flex: 0 0 auto;
+}
+
+.store-top h1 {
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.store-top .store-crumb {
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.store-top .store-runline {
+  font-size: 13px;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.store-top .store-ranin {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 360px;
+}
+
+.store-top .store-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.store-top button {
+  padding: 4px 12px;
+  min-height: 30px;
+}
+
+.store-chip {
+  display: inline-block;
+  padding: 1px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  font-size: 12px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.store-chip.busy {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.store-chip.edited {
+  border-style: dashed;
+  color: var(--muted);
+}
+
+.store-progress {
+  width: 140px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.store-progress > i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 120ms linear;
+}
+
+.store-notice {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--store-warn);
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.store-notice.error {
+  border-left-color: var(--store-bad);
+}
+
+.store-notice button {
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+/* ---------- body: the stage and the side panel ---------- */
+
+.store-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(320px, 27vw, 360px);
+  gap: var(--store-gap);
+  align-items: stretch;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.store-stage {
+  position: relative;
+  background: var(--store-stage);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+}
+
+.store-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+/* The canvas is in the tab order (the keyboard map works from it): a ring when Tab lands on it, none after a click. */
+.store-stage canvas:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.store-stage canvas:focus-visible,
+.store-minimap .wrap:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.store-stage-inner.walking canvas {
+  cursor: crosshair;
+}
+
+.store-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.store-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -100%);
+  font-size: 11px;
+  line-height: 1.2;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--store-overlay);
+  border: 1px solid var(--store-overlay-line);
+  color: var(--text);
+  white-space: nowrap;
+  pointer-events: auto;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.store-label.queue {
+  background: var(--store-info-text);
+  color: #fff;
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.store-label.short {
+  background: var(--store-bad);
+  color: #fff;
+  border-color: transparent;
+}
+
+.store-label.customer {
+  border-color: #c2255c;
+}
+
+.store-label.vehicle {
+  border-color: var(--store-good);
+}
+
+.store-label.selected {
+  outline: 2px solid var(--store-playhead);
+}
+
+/* ---------- stage overlays ----------
+   .store-overlay is the look only; the stacks place them. The stacks let pointer
+   events through to the canvas everywhere except on the boxes themselves. */
+
+.store-overlay {
+  background: var(--store-overlay);
+  border: 1px solid var(--store-overlay-line);
+  border-radius: 8px;
+  font-size: 12px;
+  backdrop-filter: blur(4px);
+  pointer-events: auto;
+}
+
+.store-ovl {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  gap: var(--store-gap);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* The top stack is a column with both edges set, so an expanded HUD shrinks and scrolls
+   instead of spilling over the ticker; the bottom edge leaves room for the ticker, the
+   hint and the minimap. It paints above the bottom stack so an open menu is never under them. */
+.store-ovl-top {
+  top: 10px;
+  bottom: 190px;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 3;
+}
+
+/* The row wraps rather than shrinks: the toolbar stays on one line and the clock drops
+   under it when the stage is too narrow for both, instead of the two overlapping. */
+.store-ovl-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--store-gap);
+  align-items: flex-start;
+  width: 100%;
+  flex: 0 0 auto;
+  pointer-events: none;
+}
+
+.store-ovl-bottom {
+  bottom: 10px;
+  align-items: flex-end;
+}
+
+.store-ovl-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--store-gap);
+  min-width: 0;
+  min-height: 0;
+  pointer-events: none;
+}
+
+.store-ovl-col.left {
+  flex: 1 1 auto;
+  align-items: flex-start;
+}
+
+/* A fixed basis, not the content's: a toast wraps inside it instead of widening the column and bumping the clock onto the next line. */
+.store-ovl-col.right {
+  flex: 0 1 240px;
+  align-items: flex-end;
+  margin-left: auto;
+}
+
+.store-ovl-bottom > .store-minimap {
+  margin-left: auto;
+}
+
+.store-campill {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 5px 6px;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.store-campill button {
+  padding: 4px 10px;
+  min-height: 32px;
+  font-size: 12.5px;
+  border-radius: 999px;
+}
+
+.store-campill button.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.store-campill .sep {
+  width: 1px;
+  height: 20px;
+  background: var(--line);
+  margin: 0 3px;
+}
+
+.store-menuwrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.store-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 250px;
+  padding: 4px;
+  display: grid;
+  gap: 2px;
+  z-index: 3;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.store-menu button {
+  display: grid;
+  grid-template-columns: 16px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  text-align: left;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  padding: 6px 8px;
+  min-height: 32px;
+  font-size: 12.5px;
+  color: var(--text);
+}
+
+.store-menu button:hover {
+  background: var(--code-bg);
+}
+
+.store-menu button.on i {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.store-menu kbd,
+.store-help kbd {
+  font-family: ui-monospace, "Cascadia Mono", Menlo, monospace;
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0 5px;
+  white-space: nowrap;
+}
+
+.store-clockpill {
+  padding: 6px 10px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  display: grid;
+  gap: 2px;
+  justify-items: end;
+  max-width: 320px;
+}
+
+.store-clockpill b {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.store-clockpill .store-speed {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.store-clockpill .store-sel {
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.store-clockpill button {
+  padding: 2px 9px;
+  font-size: 11px;
+  min-height: 24px;
+}
+
+.store-toast {
+  padding: 6px 12px;
+  border-left: 3px solid var(--accent);
+  animation: store-fade 300ms ease-out;
+  max-width: 100%;
+}
+
+/* ---------- HUD: the headline strip, everything else behind More ---------- */
+
+.store-hud {
+  max-width: 100%;
+  min-height: 0;
+  flex: 0 1 auto;
+}
+
+.store-hud.compact {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  padding: 4px 6px;
+}
+
+.store-hud.compact .store-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 4px;
+  min-width: 0;
+}
+
+.store-hud.compact .store-tile {
+  padding: 2px 8px;
+  border-right: 1px solid var(--line);
+  min-width: 78px;
+}
+
+.store-hud.compact .store-tile:last-of-type {
+  border-right: 0;
+}
+
+.store-hud.compact .store-tile b {
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+.store-hud-more {
+  align-self: center;
+  padding: 3px 9px;
+  min-height: 28px;
+  font-size: 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.store-qmini {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  align-items: end;
+  column-gap: 6px;
+  padding: 2px 8px;
+  border: 0;
+  border-left: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+  color: var(--text);
+  text-align: left;
+  min-width: 96px;
+}
+
+.store-qmini .bars {
+  grid-row: 1 / span 2;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 16px;
+}
+
+.store-qmini .bars i {
+  display: block;
+  width: 4px;
+  background: var(--store-info);
+  border-radius: 1px;
+}
+
+.store-qmini b {
+  font-size: 15px;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.store-qmini > span:last-child {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.store-hud.expanded {
+  width: min(580px, 100%);
+  padding: 8px 12px 10px;
+  overflow: auto;
+  display: grid;
+  gap: 8px;
+}
+
+.store-hud-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.store-hud h4 {
+  margin: 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.store-hud-cols {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) minmax(220px, 1.2fr);
+  gap: 10px 16px;
+}
+
+.store-hud-cols h4 {
+  margin-bottom: 6px;
+}
+
+.store-hud.expanded .store-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 4px 12px;
+}
+
+.store-tile b {
+  display: block;
+  font-size: 17px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.store-tile span {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.store-tile.bad b {
+  color: var(--store-bad);
+}
+
+.store-tile.warn b {
+  color: var(--store-warn-text);
+}
+
+.store-queues {
+  display: grid;
+  gap: 4px;
+}
+
+.store-queue {
+  display: grid;
+  grid-template-columns: 62px 1fr 22px;
+  gap: 6px;
+  align-items: center;
+  font-size: 12px;
+  cursor: pointer;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--text);
+  text-align: left;
+}
+
+.store-queue:hover span:first-child {
+  color: var(--accent);
+}
+
+.store-queue .bar {
+  height: 10px;
+  border-radius: 3px;
+  background: var(--code-bg);
+  overflow: hidden;
+  position: relative;
+}
+
+.store-queue .bar > i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--store-info);
+  border-radius: 3px;
+}
+
+/* Held: somebody qualified is free, but the till, the counter or the cart is taken. */
+.store-queue .bar > i.held {
+  background: repeating-linear-gradient(135deg, var(--store-warn) 0 3px, transparent 3px 6px);
+}
+
+.store-queue em {
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--muted);
+}
+
+.store-today {
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+  max-height: 160px;
+  overflow: auto;
+}
+
+/* Every row is a button, so a keyboard reaches the truck it selects; one with nothing to select is disabled and looks like plain text. */
+.store-today .row {
+  margin: 0;
+  gap: 4px 6px;
+  align-items: center;
+  flex-wrap: nowrap;
+  display: flex;
+  width: 100%;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.store-today .row:hover:not(:disabled) .name {
+  color: var(--accent);
+}
+
+.store-today .row:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.store-today .name {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.store-status {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: var(--code-bg);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.store-status.on {
+  background: var(--store-info-text);
+  color: #fff;
+}
+
+.store-status.good {
+  background: var(--store-good);
+  color: #fff;
+}
+
+.store-status.bad {
+  background: var(--store-bad);
+  color: #fff;
+}
+
+.store-status.warn {
+  background: var(--store-warn-text);
+  color: #fff;
+}
+
+/* ---------- ticker, minimap, hint, help ---------- */
+
+.store-ticker {
+  width: min(460px, 100%);
+  padding: 6px 8px;
+}
+
+.store-ticker ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+
+/* Each line is a button (Tab reaches it, Enter selects or seeks) drawn as the row it used to be. */
+.store-ticker li > button {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  width: 100%;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  line-height: 1.3;
+}
+
+.store-ticker li > button:hover {
+  color: var(--accent);
+}
+
+.store-ticker time {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 auto;
+  font-size: 11px;
+}
+
+.store-ticker li.s1 {
+  font-weight: 600;
+}
+
+.store-ticker li.s2 {
+  color: var(--store-bad);
+}
+
+.store-ticker li.latest {
+  animation: store-fade 600ms ease-out;
+}
+
+@keyframes store-fade {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.store-minimap {
+  width: 220px;
+  flex: 0 0 auto;
+  padding: 4px;
+  cursor: crosshair;
+}
+
+.store-minimap .wrap {
+  position: relative;
+}
+
+.store-minimap .wrap > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.store-minimap .dots {
+  position: absolute;
+  inset: 0;
+}
+
+.store-hint {
+  padding: 8px 12px;
+  max-width: min(480px, 100%);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-left: 3px solid var(--store-info);
+}
+
+.store-hint button {
+  min-height: 30px;
+  white-space: nowrap;
+}
+
+.store-hint > button {
+  flex: 0 0 auto;
+}
+
+/* Narrow layouts render the hint as a block under the stage, not over it. */
+.store-hint.block {
+  max-width: none;
+  width: 100%;
+  flex: 0 0 auto;
+  backdrop-filter: none;
+}
+
+.store-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  text-align: center;
+  padding: 20px;
+  pointer-events: none;
+}
+
+.store-empty b {
+  display: block;
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.store-help {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: var(--store-overlay);
+  padding: 16px 20px;
+  overflow: auto;
+  backdrop-filter: blur(6px);
+}
+
+.store-help h3 {
+  margin: 0 0 8px;
+}
+
+.store-help table {
+  border-collapse: collapse;
+  font-size: 13px;
+  width: 100%;
+  max-width: 660px;
+}
+
+.store-help td {
+  padding: 3px 10px 3px 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.store-help kbd {
+  font-size: 12px;
+  background: var(--code-bg);
+}
+
+/* ---------- side panel ---------- */
+
+.store-side {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.store-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--line);
+  padding: 4px 4px 0;
+  gap: 0;
+  flex: 0 0 auto;
+}
+
+.store-tabs button {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: none;
+  padding: 8px 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.store-tabs button.on {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+.store-tabs button .n {
+  display: inline-block;
+  min-width: 16px;
+  padding: 0 4px;
+  margin-left: 4px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
+}
+
+.store-tabbody {
+  padding: 12px;
+  overflow: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  font-size: 13px;
+}
+
+.store-tabbody[hidden] {
+  display: none;
+}
+
+.store-tabbody h3 {
+  margin: 14px 0 6px;
+  font-size: 13px;
+}
+
+.store-tabbody h3:first-child {
+  margin-top: 0;
+}
+
+.store-subtabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 8px 0 10px;
+}
+
+.store-subtabs button {
+  padding: 3px 9px;
+  font-size: 12px;
+  border-radius: 999px;
+}
+
+.store-subtabs button.on {
+  background: var(--text);
+  color: var(--panel);
+  border-color: var(--text);
+}
+
+.store-field {
+  display: grid;
+  gap: 2px;
+  margin: 0 0 10px;
+}
+
+.store-field > label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.store-field input[type="text"],
+.store-field input[type="number"],
+.store-field input[type="time"],
+.store-field select {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 5px 8px;
+  width: 100%;
+  max-width: 220px;
+}
+
+.store-field input[type="number"] {
+  width: 110px;
+}
+
+.store-field .help {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.store-field .err,
+.store-err {
+  font-size: 12px;
+  color: var(--store-bad);
+}
+
+.store-field.invalid input,
+.store-field.invalid select {
+  border-color: var(--store-bad);
+}
+
+.store-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0 10px;
+}
+
+.store-days {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+
+.store-days button {
+  padding: 2px 7px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.store-days button.on {
+  background: var(--store-info);
+  border-color: var(--store-info);
+  color: #fff;
+}
+
+.store-rows {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 8px;
+  margin: 0 0 10px;
+  overflow-x: auto;
+}
+
+.store-rows table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+}
+
+.store-rows th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 2px 6px 2px 0;
+  white-space: nowrap;
+}
+
+.store-rows td {
+  padding: 2px 6px 2px 0;
+  vertical-align: top;
+}
+
+.store-rows input,
+.store-rows select {
+  font: inherit;
+  font-size: 12px;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 3px 6px;
+  width: 100%;
+  min-width: 56px;
+}
+
+.store-rows input.invalid,
+.store-rows select.invalid {
+  border-color: var(--store-bad);
+}
+
+.store-rows .del {
+  padding: 2px 6px;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.store-rows .foot {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.store-caveat {
+  font-size: 11px;
+  color: var(--muted);
+  border-left: 3px solid var(--store-warn);
+  padding-left: 8px;
+  margin: 6px 0 10px;
+}
+
+.store-changes {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12px;
+  color: var(--muted);
+  max-height: 84px;
+  overflow: auto;
+}
+
+.store-runrow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  flex: 0 0 auto;
+}
+
+.store-runrow .row {
+  margin: 0;
+}
+
+.store-runrow input[type="number"] {
+  width: 64px;
+}
+
+.store-runrow select {
+  max-width: 100%;
+}
+
+.store-runbtns {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* inspector */
+
+.store-inspect h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.store-inspect .sec {
+  margin: 0 0 12px;
+}
+
+.store-inspect .sec h4 {
+  margin: 0 0 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.store-inspect dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(84px, 110px) 1fr;
+  gap: 2px 10px;
+  font-size: 12.5px;
+}
+
+.store-inspect dt {
+  color: var(--muted);
+}
+
+.store-inspect dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The engine-fact versus playback-detail distinction, in one pseudo-element. */
+.store-inspect dd.shown::after {
+  content: " shown";
+  font-size: 10px;
+  color: var(--store-warn);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-left: 4px;
+}
+
+.store-legend {
+  font-size: 11px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}
+
+/* compare */
+
+.store-compare table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+}
+
+.store-compare th,
+.store-compare td {
+  padding: 3px 6px 3px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.store-compare th:first-child,
+.store-compare td:first-child {
+  text-align: left;
+  white-space: normal;
+}
+
+.store-compare td.good {
+  color: var(--store-good);
+}
+
+.store-compare td.bad {
+  color: var(--store-bad);
+}
+
+.store-compare .runs {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.store-compare .runs b {
+  display: inline-block;
+  width: 18px;
+}
+
+/* report */
+
+.store-report .head {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.store-report .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.store-report .tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin: 4px 0 8px;
+}
+
+.store-report .tiles div {
+  display: grid;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--muted);
+  min-width: 0;
+}
+
+.store-report .tiles b {
+  font-size: 16px;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.store-report .tiles b.bad {
+  color: var(--store-bad);
+}
+
+.store-report .tiles b.good {
+  color: var(--store-good);
+}
+
+.store-report .recs {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.store-report .recs li {
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.store-report .recs p {
+  margin: 4px 0 0;
+}
+
+.store-report .recs p:first-child {
+  margin-top: 0;
+}
+
+.store-report .recs .action {
+  color: var(--muted);
+}
+
+.store-report .area {
+  font-size: 11px;
+  color: var(--store-info-text);
+}
+
+.store-report .scroll {
+  overflow-x: auto;
+}
+
+.store-report table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+}
+
+.store-report th,
+.store-report td {
+  padding: 3px 6px 3px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.store-report th:first-child,
+.store-report td:first-child {
+  text-align: left;
+}
+
+.store-report tr.bad td {
+  color: var(--store-bad);
+}
+
+/* ---------- timeline: always on screen, docked under the stage ---------- */
+
+.store-timeline {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 10px 8px;
+  flex: 0 0 auto;
+}
+
+.store-transport {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.store-transport button {
+  padding: 3px 10px;
+  min-height: 30px;
+}
+
+.store-transport button.play {
+  min-width: 84px;
+  font-weight: 600;
+}
+
+.store-transport .speeds {
+  display: flex;
+  gap: 2px;
+}
+
+.store-transport .speeds button {
+  padding: 3px 8px;
+  font-size: 12px;
+  border-radius: 999px;
+}
+
+.store-transport .speeds button.on {
+  background: var(--text);
+  color: var(--panel);
+  border-color: var(--text);
+}
+
+.store-transport .time {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  min-width: 150px;
+  text-align: right;
+}
+
+.store-transport label {
+  font-size: 12px;
+  color: var(--muted);
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.store-transport .spacer {
+  flex: 1 1 auto;
+}
+
+.store-legendwrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.store-legendwrap > button {
+  min-width: 30px;
+  padding: 3px 0;
+}
+
+.store-legendpop {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: 0;
+  width: min(560px, 80vw);
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text);
+  z-index: 5;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.store-strip {
+  width: 100%;
+  display: block;
+  cursor: col-resize;
+  touch-action: none;
+  user-select: none;
+  border-radius: 6px;
+}
+
+.store-strip text {
+  font-size: 10px;
+  fill: var(--muted);
+  pointer-events: none;
+}
+
+.store-strip .day-a {
+  fill: var(--code-bg);
+}
+
+.store-strip .day-b {
+  fill: var(--panel);
+}
+
+.store-strip .quiet {
+  fill: var(--store-quiet);
+}
+
+/* The hours the doors are open: the band that tells the pre-open pick window from the selling day. */
+.store-strip .open {
+  fill: var(--store-open);
+}
+
+.store-strip .shift {
+  fill: var(--store-shift);
+}
+
+.store-strip .hour {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.store-strip .playhead {
+  stroke: var(--store-playhead);
+  stroke-width: 2;
+}
+
+.store-strip .late {
+  fill: var(--store-bad);
+}
+
+.store-strip .arrive {
+  fill: var(--store-good);
+}
+
+.store-strip .depart {
+  fill: var(--ground);
+}
+
+.store-strip .pos {
+  fill: var(--store-bad);
+  opacity: 0.35;
+}
+
+.store-strip .outage {
+  fill: var(--store-warn);
+  opacity: 0.35;
+}
+
+.store-strip .absent {
+  fill: none;
+  stroke: var(--muted);
+}
+
+.store-strip .rowlabel {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ---------- wide: the app fills the viewport and the stage is the hero ---------- */
+
+@media (min-width: 1000px) {
+  main.store-main {
+    height: 100dvh;
+    padding: 8px 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .store-app {
+    flex: 1 1 auto;
+    height: 100%;
+  }
+
+  .store-top {
+    flex-wrap: nowrap;
+  }
+
+  .store-top .store-runline {
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .store-top .store-actions {
+    flex-wrap: nowrap;
+    flex: 0 0 auto;
+  }
+}
+
+/* A short window leaves the stage about 520 px tall: three ticker lines keep the shop in view. */
+@media (min-width: 1000px) and (max-height: 760px) {
+  .store-ticker li:nth-child(n + 4) {
+    display: none;
+  }
+}
+
+@media (min-width: 1000px) and (max-height: 640px) {
+  .store-minimap {
+    width: 170px;
+  }
+}
+
+/* ---------- screenshot mode: the frame only (shot=1 without chrome=1) ---------- */
+
+.store-app.shot .store-top,
+.store-app.shot .store-side,
+.store-app.shot .store-timeline,
+.store-app.shot .store-notice,
+.store-app.shot .store-ovl,
+.store-app.shot .store-help,
+.store-app.shot .store-empty {
+  display: none;
+}
+
+.store-app.shot .store-body {
+  grid-template-columns: 1fr;
+}
+
+.store-app.shot .store-stage {
+  height: calc(100vh - 40px);
+}
+
+/* ---------- narrow: a document again, single column, 16 px gutters ---------- */
+
+@media (max-width: 999px) {
+  .store-body {
+    grid-template-columns: 1fr;
+  }
+
+  .store-stage {
+    height: clamp(300px, 80vw, 520px);
+  }
+
+  .store-hud {
+    display: grid;
+  }
+
+  .store-hud.compact {
+    display: flex;
+  }
+
+  .store-hud.expanded {
+    width: 100%;
+  }
+
+  .store-hud-cols {
+    grid-template-columns: 1fr;
+  }
+
+  .store-side {
+    height: auto;
+    max-height: none;
+  }
+
+  .store-tabbody {
+    max-height: 60vh;
+  }
+
+  .store-side.sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20;
+    border-radius: 12px 12px 0 0;
+    max-height: 62vh;
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.18);
+    transform: translateY(calc(100% - 42px));
+    transition: transform 180ms ease-out;
+  }
+
+  .store-side.sheet.open {
+    transform: translateY(0);
+  }
+
+  .store-app.sheeted {
+    padding-bottom: 52px;
+  }
+
+  .store-ticker {
+    width: 100%;
+  }
+
+  .store-ticker li:nth-child(n + 4) {
+    display: none;
+  }
+
+  .store-campill .narrow-hide {
+    display: none;
+  }
+
+  .store-ovl-top {
+    bottom: 80px;
+  }
+
+  .store-legendpop {
+    right: auto;
+    left: 0;
+  }
+}
+
+@media (max-width: 599px) {
+  .store-minimap,
+  .store-clockpill {
+    display: none;
+  }
+
+  .store-hud.compact .store-tile {
+    min-width: 0;
+    flex: 1 1 30%;
+  }
+
+  .store-hud.expanded .store-tiles {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* The clock takes its own last row, with the zoom and legend buttons to its right. */
+  .store-transport .spacer {
+    display: none;
+  }
+
+  .store-transport .time {
+    min-width: 0;
+    flex: 1 1 auto;
+    text-align: left;
+    order: 10;
+  }
+
+  .store-transport .chip,
+  .store-transport .store-legendwrap {
+    order: 11;
+  }
+
+  .store-top .store-ranin {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .store-hud.expanded .store-tiles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

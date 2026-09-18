@@ -1,0 +1,231 @@
+[
+  {
+    "id": "store-midtown",
+    "name": "Midtown Sweets",
+    "store": "s1",
+    "building": { "widthFt": 70, "depthFt": 90 },
+    "backroomY": 62,
+    "gondolas": { "originX": 13, "originY": 20, "runs": 4, "baysPerRun": 9, "shelves": 5, "bayWidthFt": 4, "aisleWidthFt": 5.5, "depthFt": 4, "facingsPerBay": 3, "endcapShelves": 4 },
+    "walls": [
+      { "id": "W-BULK", "side": "left", "kind": "bulk", "y0": 20, "y1": 56, "shelves": 4, "bays": 9, "depthFt": 2.5, "facingsPerBay": 2 },
+      { "id": "W-FRONT", "side": "left", "kind": "wall", "y0": 5, "y1": 17, "shelves": 5, "bays": 3, "depthFt": 2, "facingsPerBay": 3 }
+    ],
+    "showcase": { "x": 58, "y0": 22, "y1": 50, "bays": 7, "shelves": 3, "depthFt": 3, "facingsPerBay": 4, "stations": 2, "backCorridorFt": 10.5 },
+    "seasonal": { "tables": 2, "originX": 40, "originY": 8, "widthFt": 4, "lengthFt": 9, "shelves": 2, "facingsPerBay": 3, "pitchFt": 9 },
+    "checkout": { "registers": 2, "x": 58, "y": 6, "depthFt": 3, "pitchFt": 7, "wrap": true, "impulseBays": 3, "shelves": 4, "facingsPerBay": 2 },
+    "backroom": [
+      { "kind": "rack", "originX": 4, "originY": 66, "aisles": 1, "baysPerSide": 5, "levels": 3, "bayWidthFt": 4, "aisleWidthFt": 8, "depthFt": 4 },
+      { "kind": "shelving", "originX": 26, "originY": 66, "aisles": 1, "baysPerSide": 6, "levels": 4, "bayWidthFt": 3, "aisleWidthFt": 4, "depthFt": 2 }
+    ],
+    "doors": { "docks": 2, "ground": 1, "entrances": 1 },
+    "parking": { "depthFt": 75, "stalls": 32, "accessibleStalls": 2, "curbsideStalls": 2 },
+    "equipment": { "palletJacks": 1, "stockCarts": 3, "vans": 1 },
+    "hours": [
+      { "day": 1, "open": "10:00", "close": "20:00" },
+      { "day": 2, "open": "10:00", "close": "20:00" },
+      { "day": 3, "open": "10:00", "close": "20:00" },
+      { "day": 4, "open": "10:00", "close": "20:00" },
+      { "day": 5, "open": "10:00", "close": "21:00" },
+      { "day": 6, "open": "10:00", "close": "21:00" },
+      { "day": 7, "open": "11:00", "close": "18:00" }
+    ],
+    "times": {
+      "orderCutoff": "18:00",
+      "pickStart": "06:30",
+      "vanDeparture": "09:00",
+      "vanSecondDeparture": "14:30",
+      "overnightWindow": ["04:00", "07:30"],
+      "directWindow": ["11:00", "16:00"]
+    },
+    "dcDeliveryDays": [1, 3, 5],
+    "shifts": [
+      { "id": "open", "start": "06:00", "end": "14:30", "breakMin": 30, "indirectMin": 30 },
+      { "id": "mid", "start": "09:30", "end": "18:00", "breakMin": 30, "indirectMin": 20 },
+      { "id": "close", "start": "12:30", "end": "21:30", "breakMin": 30, "indirectMin": 30 }
+    ],
+    "operatingDays": [1, 2, 3, 4, 5, 6, 7]
+  },
+  {
+    "id": "store-decatur",
+    "name": "Decatur Square Candy",
+    "store": "s2",
+    "building": { "widthFt": 75, "depthFt": 95 },
+    "backroomY": 64,
+    "gondolas": { "originX": 13, "originY": 20, "runs": 4, "baysPerRun": 10, "shelves": 5, "bayWidthFt": 4, "aisleWidthFt": 5.5, "depthFt": 4, "facingsPerBay": 3, "endcapShelves": 4 },
+    "walls": [
+      { "id": "W-BULK", "side": "left", "kind": "bulk", "y0": 20, "y1": 60, "shelves": 4, "bays": 10, "depthFt": 2.5, "facingsPerBay": 2 },
+      { "id": "W-FRONT", "side": "left", "kind": "wall", "y0": 5, "y1": 17, "shelves": 5, "bays": 3, "depthFt": 2, "facingsPerBay": 3 }
+    ],
+    "showcase": { "x": 62, "y0": 26, "y1": 56, "bays": 8, "shelves": 3, "depthFt": 3, "facingsPerBay": 4, "stations": 2, "backCorridorFt": 11.5 },
+    "seasonal": { "tables": 2, "originX": 42, "originY": 8, "widthFt": 4, "lengthFt": 9, "shelves": 2, "facingsPerBay": 3, "pitchFt": 9 },
+    "checkout": { "registers": 3, "x": 62, "y": 6, "depthFt": 3, "pitchFt": 6, "wrap": true, "impulseBays": 4, "shelves": 4, "facingsPerBay": 2 },
+    "backroom": [
+      { "kind": "rack", "originX": 4, "originY": 68, "aisles": 1, "baysPerSide": 6, "levels": 3, "bayWidthFt": 4, "aisleWidthFt": 8, "depthFt": 4 },
+      { "kind": "shelving", "originX": 26, "originY": 68, "aisles": 1, "baysPerSide": 7, "levels": 4, "bayWidthFt": 3, "aisleWidthFt": 4, "depthFt": 2 }
+    ],
+    "doors": { "docks": 2, "ground": 1, "entrances": 1 },
+    "parking": { "depthFt": 80, "stalls": 38, "accessibleStalls": 2, "curbsideStalls": 2 },
+    "equipment": { "palletJacks": 1, "stockCarts": 4, "vans": 1 },
+    "hours": [
+      { "day": 1, "open": "10:00", "close": "20:00" },
+      { "day": 2, "open": "10:00", "close": "20:00" },
+      { "day": 3, "open": "10:00", "close": "20:00" },
+      { "day": 4, "open": "10:00", "close": "20:00" },
+      { "day": 5, "open": "10:00", "close": "21:00" },
+      { "day": 6, "open": "10:00", "close": "21:00" },
+      { "day": 7, "open": "11:00", "close": "18:00" }
+    ],
+    "times": {
+      "orderCutoff": "18:00",
+      "pickStart": "06:30",
+      "vanDeparture": "09:00",
+      "vanSecondDeparture": "14:30",
+      "overnightWindow": ["04:00", "07:30"],
+      "directWindow": ["11:00", "16:00"]
+    },
+    "dcDeliveryDays": [1, 3, 5],
+    "shifts": [
+      { "id": "open", "start": "06:00", "end": "14:30", "breakMin": 30, "indirectMin": 30 },
+      { "id": "mid", "start": "09:30", "end": "18:00", "breakMin": 30, "indirectMin": 20 },
+      { "id": "close", "start": "12:30", "end": "21:30", "breakMin": 30, "indirectMin": 30 }
+    ],
+    "operatingDays": [1, 2, 3, 4, 5, 6, 7]
+  },
+  {
+    "id": "store-marietta",
+    "name": "Marietta Square Confections",
+    "store": "s3",
+    "building": { "widthFt": 65, "depthFt": 85 },
+    "backroomY": 58,
+    "gondolas": { "originX": 12, "originY": 18, "runs": 3, "baysPerRun": 9, "shelves": 5, "bayWidthFt": 4, "aisleWidthFt": 5.5, "depthFt": 4, "facingsPerBay": 3, "endcapShelves": 4 },
+    "walls": [
+      { "id": "W-BULK", "side": "left", "kind": "bulk", "y0": 18, "y1": 54, "shelves": 4, "bays": 9, "depthFt": 2.5, "facingsPerBay": 2 },
+      { "id": "W-FRONT", "side": "left", "kind": "wall", "y0": 4, "y1": 15, "shelves": 5, "bays": 3, "depthFt": 2, "facingsPerBay": 3 }
+    ],
+    "showcase": { "x": 53, "y0": 22, "y1": 48, "bays": 7, "shelves": 3, "depthFt": 3, "facingsPerBay": 4, "stations": 1, "backCorridorFt": 10.5 },
+    "seasonal": { "tables": 2, "originX": 36, "originY": 7, "widthFt": 4, "lengthFt": 8, "shelves": 2, "facingsPerBay": 3, "pitchFt": 9 },
+    "checkout": { "registers": 2, "x": 53, "y": 6, "depthFt": 3, "pitchFt": 7, "wrap": true, "impulseBays": 3, "shelves": 4, "facingsPerBay": 2 },
+    "backroom": [
+      { "kind": "rack", "originX": 4, "originY": 62, "aisles": 1, "baysPerSide": 4, "levels": 3, "bayWidthFt": 4, "aisleWidthFt": 8, "depthFt": 4 },
+      { "kind": "shelving", "originX": 26, "originY": 62, "aisles": 1, "baysPerSide": 6, "levels": 4, "bayWidthFt": 3, "aisleWidthFt": 4, "depthFt": 2 }
+    ],
+    "doors": { "docks": 1, "ground": 1, "entrances": 1 },
+    "parking": { "depthFt": 70, "stalls": 24, "accessibleStalls": 2, "curbsideStalls": 2 },
+    "equipment": { "palletJacks": 1, "stockCarts": 3, "vans": 1 },
+    "hours": [
+      { "day": 1, "open": "10:00", "close": "20:00" },
+      { "day": 2, "open": "10:00", "close": "20:00" },
+      { "day": 3, "open": "10:00", "close": "20:00" },
+      { "day": 4, "open": "10:00", "close": "20:00" },
+      { "day": 5, "open": "10:00", "close": "20:00" },
+      { "day": 6, "open": "10:00", "close": "20:00" },
+      { "day": 7, "open": "11:00", "close": "18:00" }
+    ],
+    "times": {
+      "orderCutoff": "18:00",
+      "pickStart": "07:00",
+      "vanDeparture": "09:15",
+      "vanSecondDeparture": null,
+      "overnightWindow": ["04:30", "08:00"],
+      "directWindow": ["11:00", "16:00"]
+    },
+    "dcDeliveryDays": [1, 3, 5],
+    "shifts": [
+      { "id": "open", "start": "06:30", "end": "15:00", "breakMin": 30, "indirectMin": 30 },
+      { "id": "mid", "start": "10:00", "end": "18:30", "breakMin": 30, "indirectMin": 20 },
+      { "id": "close", "start": "12:00", "end": "20:30", "breakMin": 30, "indirectMin": 30 }
+    ],
+    "operatingDays": [1, 2, 3, 4, 5, 6, 7]
+  },
+  {
+    "id": "store-avalon",
+    "name": "Avalon Candy Co.",
+    "store": "s4",
+    "building": { "widthFt": 90, "depthFt": 110 },
+    "backroomY": 74,
+    "gondolas": { "originX": 14, "originY": 22, "runs": 5, "baysPerRun": 11, "shelves": 5, "bayWidthFt": 4, "aisleWidthFt": 6, "depthFt": 4, "facingsPerBay": 3, "endcapShelves": 4 },
+    "walls": [
+      { "id": "W-BULK", "side": "left", "kind": "bulk", "y0": 22, "y1": 66, "shelves": 4, "bays": 11, "depthFt": 2.5, "facingsPerBay": 2 },
+      { "id": "W-FRONT", "side": "left", "kind": "wall", "y0": 5, "y1": 19, "shelves": 5, "bays": 4, "depthFt": 2, "facingsPerBay": 3 }
+    ],
+    "showcase": { "x": 74, "y0": 32, "y1": 66, "bays": 10, "shelves": 3, "depthFt": 3.5, "facingsPerBay": 4, "stations": 3, "backCorridorFt": 14.25 },
+    "seasonal": { "tables": 3, "originX": 48, "originY": 8, "widthFt": 4.5, "lengthFt": 10, "shelves": 3, "facingsPerBay": 3, "pitchFt": 9 },
+    "checkout": { "registers": 4, "x": 74, "y": 6, "depthFt": 3.5, "pitchFt": 6, "wrap": true, "impulseBays": 5, "shelves": 4, "facingsPerBay": 2 },
+    "backroom": [
+      { "kind": "rack", "originX": 5, "originY": 78, "aisles": 2, "baysPerSide": 7, "levels": 4, "bayWidthFt": 4, "aisleWidthFt": 8, "depthFt": 4 },
+      { "kind": "shelving", "originX": 44, "originY": 78, "aisles": 1, "baysPerSide": 8, "levels": 4, "bayWidthFt": 3, "aisleWidthFt": 4, "depthFt": 2 }
+    ],
+    "doors": { "docks": 2, "ground": 1, "entrances": 2 },
+    "parking": { "depthFt": 95, "stalls": 58, "accessibleStalls": 3, "curbsideStalls": 4 },
+    "equipment": { "palletJacks": 2, "stockCarts": 5, "vans": 2 },
+    "hours": [
+      { "day": 1, "open": "10:00", "close": "20:00" },
+      { "day": 2, "open": "10:00", "close": "20:00" },
+      { "day": 3, "open": "10:00", "close": "20:00" },
+      { "day": 4, "open": "10:00", "close": "20:00" },
+      { "day": 5, "open": "10:00", "close": "21:00" },
+      { "day": 6, "open": "10:00", "close": "21:00" },
+      { "day": 7, "open": "11:00", "close": "19:00" }
+    ],
+    "times": {
+      "orderCutoff": "18:00",
+      "pickStart": "06:00",
+      "vanDeparture": "09:00",
+      "vanSecondDeparture": "14:30",
+      "overnightWindow": ["03:30", "07:00"],
+      "directWindow": ["11:00", "16:30"]
+    },
+    "dcDeliveryDays": [1, 3, 5],
+    "shifts": [
+      { "id": "open", "start": "06:00", "end": "14:30", "breakMin": 30, "indirectMin": 30 },
+      { "id": "mid", "start": "09:30", "end": "18:00", "breakMin": 30, "indirectMin": 20 },
+      { "id": "close", "start": "12:30", "end": "21:30", "breakMin": 30, "indirectMin": 30 }
+    ],
+    "operatingDays": [1, 2, 3, 4, 5, 6, 7]
+  },
+  {
+    "id": "store-buford",
+    "name": "Buford Highway World Sweets",
+    "store": "s5",
+    "building": { "widthFt": 45, "depthFt": 65 },
+    "backroomY": 46,
+    "gondolas": { "originX": 11, "originY": 16, "runs": 2, "baysPerRun": 6, "shelves": 5, "bayWidthFt": 4, "aisleWidthFt": 5, "depthFt": 4, "facingsPerBay": 3, "endcapShelves": 4 },
+    "walls": [
+      { "id": "W-BULK", "side": "left", "kind": "bulk", "y0": 16, "y1": 40, "shelves": 4, "bays": 6, "depthFt": 2.5, "facingsPerBay": 2 },
+      { "id": "W-FRONT", "side": "left", "kind": "wall", "y0": 4, "y1": 13, "shelves": 5, "bays": 3, "depthFt": 2, "facingsPerBay": 3 }
+    ],
+    "showcase": { "x": 34, "y0": 14, "y1": 38, "bays": 5, "shelves": 3, "depthFt": 3, "facingsPerBay": 4, "stations": 1, "backCorridorFt": 9.5 },
+    "seasonal": { "tables": 1, "originX": 26, "originY": 6, "widthFt": 4, "lengthFt": 7, "shelves": 2, "facingsPerBay": 3, "pitchFt": 8 },
+    "checkout": { "registers": 1, "x": 34, "y": 5, "depthFt": 3, "pitchFt": 7, "wrap": true, "impulseBays": 2, "shelves": 3, "facingsPerBay": 2 },
+    "backroom": [
+      { "kind": "rack", "originX": 3, "originY": 50, "aisles": 1, "baysPerSide": 3, "levels": 3, "bayWidthFt": 4, "aisleWidthFt": 7, "depthFt": 4 },
+      { "kind": "shelving", "originX": 22, "originY": 50, "aisles": 1, "baysPerSide": 4, "levels": 4, "bayWidthFt": 3, "aisleWidthFt": 3.5, "depthFt": 2 }
+    ],
+    "doors": { "docks": 1, "ground": 1, "entrances": 1 },
+    "parking": { "depthFt": 60, "stalls": 14, "accessibleStalls": 1, "curbsideStalls": 1 },
+    "equipment": { "palletJacks": 1, "stockCarts": 2, "vans": 1 },
+    "hours": [
+      { "day": 2, "open": "10:00", "close": "20:00" },
+      { "day": 3, "open": "10:00", "close": "20:00" },
+      { "day": 4, "open": "10:00", "close": "20:00" },
+      { "day": 5, "open": "10:00", "close": "20:00" },
+      { "day": 6, "open": "10:00", "close": "20:00" },
+      { "day": 7, "open": "11:00", "close": "18:00" }
+    ],
+    "times": {
+      "orderCutoff": "17:00",
+      "pickStart": "07:30",
+      "vanDeparture": "09:30",
+      "vanSecondDeparture": null,
+      "overnightWindow": ["05:00", "08:30"],
+      "directWindow": ["11:00", "16:00"]
+    },
+    "dcDeliveryDays": [2, 5],
+    "shifts": [
+      { "id": "open", "start": "07:00", "end": "15:00", "breakMin": 30, "indirectMin": 30 },
+      { "id": "mid", "start": "10:00", "end": "18:00", "breakMin": 30, "indirectMin": 20 },
+      { "id": "close", "start": "12:00", "end": "20:30", "breakMin": 30, "indirectMin": 30 }
+    ],
+    "operatingDays": [2, 3, 4, 5, 6, 7]
+  }
+]

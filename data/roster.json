@@ -1,0 +1,620 @@
+{
+  "generatedAt": "2026-09-16T03:22:49.209Z",
+  "seed": 44,
+  "workers": [
+    {
+      "id": "W-MID-001",
+      "store": "store-midtown",
+      "role": "Store manager",
+      "type": "full-time",
+      "homeShift": "mid",
+      "skills": [
+        "receive",
+        "stock",
+        "counter",
+        "register",
+        "pick",
+        "drive"
+      ],
+      "productivity": 1.07,
+      "hourlyRate": 29.25,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-MID-002",
+      "store": "store-midtown",
+      "role": "Shift lead",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "receive",
+        "stock",
+        "register",
+        "counter",
+        "pick"
+      ],
+      "productivity": 0.92,
+      "hourlyRate": 23.5,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-MID-003",
+      "store": "store-midtown",
+      "role": "Shift lead",
+      "type": "full-time",
+      "homeShift": "close",
+      "skills": [
+        "receive",
+        "stock",
+        "register",
+        "counter",
+        "pick"
+      ],
+      "productivity": 1.03,
+      "hourlyRate": 23,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-MID-004",
+      "store": "store-midtown",
+      "role": "Counter confectioner",
+      "type": "full-time",
+      "homeShift": "mid",
+      "skills": [
+        "counter",
+        "register",
+        "stock"
+      ],
+      "productivity": 1.01,
+      "hourlyRate": 19.25,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-MID-005",
+      "store": "store-midtown",
+      "role": "Cashier",
+      "type": "part-time",
+      "homeShift": "mid",
+      "skills": [
+        "register",
+        "stock"
+      ],
+      "productivity": 1.02,
+      "hourlyRate": 17,
+      "maxWeeklyHours": 24
+    },
+    {
+      "id": "W-MID-006",
+      "store": "store-midtown",
+      "role": "Cashier",
+      "type": "part-time",
+      "homeShift": "close",
+      "skills": [
+        "register",
+        "stock"
+      ],
+      "productivity": 0.96,
+      "hourlyRate": 15.5,
+      "maxWeeklyHours": 24
+    },
+    {
+      "id": "W-MID-007",
+      "store": "store-midtown",
+      "role": "Stocker",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "stock",
+        "receive"
+      ],
+      "productivity": 1.09,
+      "hourlyRate": 18.25,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-MID-008",
+      "store": "store-midtown",
+      "role": "Delivery driver",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "drive",
+        "pick",
+        "stock"
+      ],
+      "productivity": 1.07,
+      "hourlyRate": 20,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-DEC-001",
+      "store": "store-decatur",
+      "role": "Store manager",
+      "type": "full-time",
+      "homeShift": "mid",
+      "skills": [
+        "receive",
+        "stock",
+        "counter",
+        "register",
+        "pick",
+        "drive"
+      ],
+      "productivity": 0.98,
+      "hourlyRate": 30.25,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-DEC-002",
+      "store": "store-decatur",
+      "role": "Shift lead",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "receive",
+        "stock",
+        "register",
+        "counter",
+        "pick"
+      ],
+      "productivity": 1,
+      "hourlyRate": 23,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-DEC-003",
+      "store": "store-decatur",
+      "role": "Shift lead",
+      "type": "full-time",
+      "homeShift": "close",
+      "skills": [
+        "receive",
+        "stock",
+        "register",
+        "counter",
+        "pick"
+      ],
+      "productivity": 1,
+      "hourlyRate": 22.75,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-DEC-004",
+      "store": "store-decatur",
+      "role": "Counter confectioner",
+      "type": "full-time",
+      "homeShift": "mid",
+      "skills": [
+        "counter",
+        "register",
+        "stock"
+      ],
+      "productivity": 1.09,
+      "hourlyRate": 18.75,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-DEC-005",
+      "store": "store-decatur",
+      "role": "Counter confectioner",
+      "type": "part-time",
+      "homeShift": "close",
+      "skills": [
+        "counter",
+        "register",
+        "stock"
+      ],
+      "productivity": 0.97,
+      "hourlyRate": 20.5,
+      "maxWeeklyHours": 24
+    },
+    {
+      "id": "W-DEC-006",
+      "store": "store-decatur",
+      "role": "Cashier",
+      "type": "part-time",
+      "homeShift": "mid",
+      "skills": [
+        "register",
+        "stock"
+      ],
+      "productivity": 0.98,
+      "hourlyRate": 17.5,
+      "maxWeeklyHours": 24
+    },
+    {
+      "id": "W-DEC-007",
+      "store": "store-decatur",
+      "role": "Cashier",
+      "type": "part-time",
+      "homeShift": "close",
+      "skills": [
+        "register",
+        "stock"
+      ],
+      "productivity": 0.99,
+      "hourlyRate": 16.75,
+      "maxWeeklyHours": 24
+    },
+    {
+      "id": "W-DEC-008",
+      "store": "store-decatur",
+      "role": "Receiver",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "receive",
+        "stock",
+        "pick"
+      ],
+      "productivity": 0.95,
+      "hourlyRate": 18,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-DEC-009",
+      "store": "store-decatur",
+      "role": "Delivery driver",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "drive",
+        "pick",
+        "stock"
+      ],
+      "productivity": 0.99,
+      "hourlyRate": 20.75,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-MAR-001",
+      "store": "store-marietta",
+      "role": "Store manager",
+      "type": "full-time",
+      "homeShift": "mid",
+      "skills": [
+        "receive",
+        "stock",
+        "counter",
+        "register",
+        "pick",
+        "drive"
+      ],
+      "productivity": 0.97,
+      "hourlyRate": 29,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-MAR-002",
+      "store": "store-marietta",
+      "role": "Shift lead",
+      "type": "full-time",
+      "homeShift": "close",
+      "skills": [
+        "receive",
+        "stock",
+        "register",
+        "counter",
+        "pick"
+      ],
+      "productivity": 1.07,
+      "hourlyRate": 22.75,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-MAR-003",
+      "store": "store-marietta",
+      "role": "Counter confectioner",
+      "type": "full-time",
+      "homeShift": "mid",
+      "skills": [
+        "counter",
+        "register",
+        "stock"
+      ],
+      "productivity": 1.01,
+      "hourlyRate": 19.25,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-MAR-004",
+      "store": "store-marietta",
+      "role": "Cashier",
+      "type": "part-time",
+      "homeShift": "mid",
+      "skills": [
+        "register",
+        "stock"
+      ],
+      "productivity": 0.91,
+      "hourlyRate": 16.75,
+      "maxWeeklyHours": 24
+    },
+    {
+      "id": "W-MAR-005",
+      "store": "store-marietta",
+      "role": "Cashier",
+      "type": "part-time",
+      "homeShift": "close",
+      "skills": [
+        "register",
+        "stock"
+      ],
+      "productivity": 0.96,
+      "hourlyRate": 17,
+      "maxWeeklyHours": 24
+    },
+    {
+      "id": "W-MAR-006",
+      "store": "store-marietta",
+      "role": "Stocker",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "stock",
+        "receive"
+      ],
+      "productivity": 1.08,
+      "hourlyRate": 18.5,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-MAR-007",
+      "store": "store-marietta",
+      "role": "Delivery driver",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "drive",
+        "pick",
+        "stock"
+      ],
+      "productivity": 1,
+      "hourlyRate": 21,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-AVA-001",
+      "store": "store-avalon",
+      "role": "Store manager",
+      "type": "full-time",
+      "homeShift": "mid",
+      "skills": [
+        "receive",
+        "stock",
+        "counter",
+        "register",
+        "pick",
+        "drive"
+      ],
+      "productivity": 1.05,
+      "hourlyRate": 30,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-AVA-002",
+      "store": "store-avalon",
+      "role": "Shift lead",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "receive",
+        "stock",
+        "register",
+        "counter",
+        "pick"
+      ],
+      "productivity": 1.05,
+      "hourlyRate": 22.5,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-AVA-003",
+      "store": "store-avalon",
+      "role": "Shift lead",
+      "type": "full-time",
+      "homeShift": "close",
+      "skills": [
+        "receive",
+        "stock",
+        "register",
+        "counter",
+        "pick"
+      ],
+      "productivity": 1.03,
+      "hourlyRate": 23.5,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-AVA-004",
+      "store": "store-avalon",
+      "role": "Counter confectioner",
+      "type": "full-time",
+      "homeShift": "mid",
+      "skills": [
+        "counter",
+        "register",
+        "stock"
+      ],
+      "productivity": 0.97,
+      "hourlyRate": 18.5,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-AVA-005",
+      "store": "store-avalon",
+      "role": "Counter confectioner",
+      "type": "full-time",
+      "homeShift": "mid",
+      "skills": [
+        "counter",
+        "register",
+        "stock"
+      ],
+      "productivity": 1.07,
+      "hourlyRate": 19,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-AVA-006",
+      "store": "store-avalon",
+      "role": "Counter confectioner",
+      "type": "part-time",
+      "homeShift": "close",
+      "skills": [
+        "counter",
+        "register",
+        "stock"
+      ],
+      "productivity": 0.94,
+      "hourlyRate": 19,
+      "maxWeeklyHours": 24
+    },
+    {
+      "id": "W-AVA-007",
+      "store": "store-avalon",
+      "role": "Cashier",
+      "type": "part-time",
+      "homeShift": "mid",
+      "skills": [
+        "register",
+        "stock"
+      ],
+      "productivity": 1.07,
+      "hourlyRate": 16.25,
+      "maxWeeklyHours": 24
+    },
+    {
+      "id": "W-AVA-008",
+      "store": "store-avalon",
+      "role": "Cashier",
+      "type": "part-time",
+      "homeShift": "mid",
+      "skills": [
+        "register",
+        "stock"
+      ],
+      "productivity": 0.91,
+      "hourlyRate": 16,
+      "maxWeeklyHours": 24
+    },
+    {
+      "id": "W-AVA-009",
+      "store": "store-avalon",
+      "role": "Cashier",
+      "type": "part-time",
+      "homeShift": "close",
+      "skills": [
+        "register",
+        "stock"
+      ],
+      "productivity": 1.09,
+      "hourlyRate": 17.5,
+      "maxWeeklyHours": 24
+    },
+    {
+      "id": "W-AVA-010",
+      "store": "store-avalon",
+      "role": "Stocker",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "stock",
+        "receive"
+      ],
+      "productivity": 0.94,
+      "hourlyRate": 18.25,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-AVA-011",
+      "store": "store-avalon",
+      "role": "Receiver",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "receive",
+        "stock",
+        "pick"
+      ],
+      "productivity": 1.02,
+      "hourlyRate": 18,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-AVA-012",
+      "store": "store-avalon",
+      "role": "Delivery driver",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "drive",
+        "pick",
+        "stock"
+      ],
+      "productivity": 1.03,
+      "hourlyRate": 21.5,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-BUF-001",
+      "store": "store-buford",
+      "role": "Store manager",
+      "type": "full-time",
+      "homeShift": "open",
+      "skills": [
+        "receive",
+        "stock",
+        "counter",
+        "register",
+        "pick",
+        "drive"
+      ],
+      "productivity": 1.08,
+      "hourlyRate": 29.25,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-BUF-002",
+      "store": "store-buford",
+      "role": "Cashier",
+      "type": "full-time",
+      "homeShift": "mid",
+      "skills": [
+        "register",
+        "stock"
+      ],
+      "productivity": 1.08,
+      "hourlyRate": 16.75,
+      "maxWeeklyHours": 40
+    },
+    {
+      "id": "W-BUF-003",
+      "store": "store-buford",
+      "role": "Stocker",
+      "type": "part-time",
+      "homeShift": "mid",
+      "skills": [
+        "stock",
+        "receive"
+      ],
+      "productivity": 1,
+      "hourlyRate": 16.75,
+      "maxWeeklyHours": 24
+    },
+    {
+      "id": "W-BUF-004",
+      "store": "store-buford",
+      "role": "Cashier",
+      "type": "full-time",
+      "homeShift": "close",
+      "skills": [
+        "register",
+        "stock"
+      ],
+      "productivity": 0.93,
+      "hourlyRate": 17,
+      "maxWeeklyHours": 40
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+name: Refresh data
+
+# Pulls a fresh baseline from the live candystore API, rebuilds the generated
+# data on top of it, and opens a pull request — but only when the market model
+# actually moved.
+#
+# `npm run pipeline` reads the committed snapshot by default; `--refresh` is
+# what fetches. That is deliberate: `data/network.json` is pinned to the same
+# candystore run as digitaltwin_mcp's, and the two twins' numbers are supposed
+# to reconcile, so pulling a new one is an act with a consequence rather than a
+# routine tidy-up. Hence: manual any time, and a monthly nudge in case
+# candystore has been redeployed with different stores.
+#
+# `npm run pipeline` also rewrites catalog.json, roster.json and manifest.json,
+# and the manifest carries a fresh `generatedAt` on every run, so "the tree is
+# dirty" is not evidence of anything. The job asks the only question that
+# matters — did `data/network.json` change? — and when the answer is no it puts
+# the working tree back and stops without a PR.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 1 * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Pull a fresh candystore snapshot and rebuild the generated data
+        run: npm run pipeline -- --refresh
+        # Unset is fine: lib/twin/candystore.ts falls back to the public
+        # deployment. Set the repository variable to point somewhere else.
+        env:
+          CANDYSTORE_URL: ${{ vars.CANDYSTORE_URL }}
+
+      - name: Did the market model move?
+        id: changed
+        run: |
+          if git diff --quiet -- data/network.json; then
+            echo "network=false" >> "$GITHUB_OUTPUT"
+            echo "candystore's baseline is unchanged; discarding the regenerated files."
+            git checkout -- data/
+          else
+            echo "network=true" >> "$GITHUB_OUTPUT"
+            git --no-pager diff --stat -- data/
+          fi
+
+      # The catalog and the roster are generated from the network, so a moved
+      # baseline can change the assortment and the crews. The suite is the gate.
+      - name: Test against the new data
+        if: steps.changed.outputs.network == 'true'
+        run: npm test
+
+      - uses: peter-evans/create-pull-request@v7
+        if: steps.changed.outputs.network == 'true'
+        with:
+          branch: data-refresh
+          title: "Refresh the candystore snapshot"
+          commit-message: "Refresh the candystore snapshot"
+          body: |
+            Automated `npm run pipeline -- --refresh`: candystore's baseline
+            network moved, so `data/network.json` and everything generated from
+            it have been rebuilt.
+
+            Before merging:
+
+            - Read `data/manifest.json` for the new `fetchedAt`, the source and
+              the counts, and check the store list is still the five shops
+              `data/sites.json` describes.
+            - Check the numbers in the README's table still hold, and rerun the
+              twin if they do not: the shop volumes come straight from these
+              annual dollars.
+            - Refresh [digitaltwin_mcp](https://github.com/Jaysunnn8solutions/digitaltwin_mcp)
+              from the same candystore run, or the warehouse twin and the shop
+              twin stop reconciling.
+          add-paths: data/

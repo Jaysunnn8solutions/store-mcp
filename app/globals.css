@@ -1,0 +1,308 @@
+:root {
+  --bg: #f7f6f2;
+  --panel: #ffffff;
+  --text: #1d1d1b;
+  --muted: #5f5e58;
+  --line: #dedbd2;
+  --accent: #b5470d;
+  --code-bg: #efede6;
+
+  /* The fixtures, matching lib/render/floor.ts and the 3D scene. */
+  --gondola: #8ba3b8;
+  --wall: #cfd0cb;
+  --endcap: #e08a3c;
+  --seasonal: #eaa963;
+  --bulk: #a8763f;
+  --showcase: #e6b23c;
+  --impulse: #e08aa8;
+  --rack: #c8ad82;
+  --dock: #2f9e44;
+  --ground: #d9480f;
+  --entrance: #1c7ed6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #151514;
+    --panel: #1e1e1c;
+    --text: #ecebe6;
+    --muted: #a3a29b;
+    --line: #34332f;
+    --accent: #e8763a;
+    --code-bg: #2a2926;
+
+    --gondola: #5f7789;
+    --wall: #6a6b66;
+    --endcap: #b56b2c;
+    --seasonal: #b8834b;
+    --bulk: #7d5930;
+    --showcase: #b2892e;
+    --impulse: #a9667e;
+    --rack: #94804f;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px 64px;
+}
+
+h1 {
+  font-size: 30px;
+  line-height: 1.15;
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 19px;
+  margin: 0 0 4px;
+}
+
+h3 {
+  font-size: 15px;
+  margin: 28px 0 8px;
+}
+
+p {
+  margin: 0 0 12px;
+}
+
+.lede {
+  color: var(--muted);
+  max-width: 760px;
+  font-size: 16px;
+}
+
+code,
+pre {
+  font-family: ui-monospace, "Cascadia Mono", Menlo, monospace;
+  font-size: 13px;
+}
+
+pre {
+  background: var(--code-bg);
+  border-radius: 6px;
+  padding: 10px 12px;
+  overflow-x: auto;
+  margin: 6px 0 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+  gap: 18px;
+  margin-top: 26px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.sub {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.tile {
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+
+.tile b {
+  display: block;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tile span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 6px 24px;
+  padding: 0;
+  list-style: none;
+}
+
+.tools li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.tools code {
+  font-weight: 600;
+}
+
+a {
+  color: var(--accent);
+}
+
+/* The shops table on the landing page. */
+.shops {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 8px;
+  display: block;
+  overflow-x: auto;
+}
+
+.shops th,
+.shops td {
+  border-bottom: 1px solid var(--line);
+  padding: 6px 12px 6px 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.shops th {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.shops td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A legend swatch for a fixture family. */
+.swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: baseline;
+}
+
+.workbench {
+  display: grid;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.drop {
+  display: block;
+  border: 1.5px dashed var(--line);
+  border-radius: 10px;
+  padding: 26px 16px;
+  text-align: center;
+  color: var(--muted);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.drop.over {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.drop input {
+  display: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.row label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+button,
+select,
+input[type="number"] {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 5px 10px;
+}
+
+input[type="number"] {
+  width: 70px;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+button.chip {
+  border-radius: 999px;
+}
+
+.error {
+  color: #c92a2a;
+  margin-top: 12px;
+}
+
+.report {
+  white-space: pre-wrap;
+  font-size: 12.5px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.roles {
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 10px 0;
+  display: block;
+  overflow-x: auto;
+}
+
+.roles td {
+  border-bottom: 1px solid var(--line);
+  padding: 4px 10px 4px 0;
+}
+
+footer {
+  margin-top: 36px;
+  color: var(--muted);
+  font-size: 13px;
+}
