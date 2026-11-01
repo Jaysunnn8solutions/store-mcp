@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-16T03:22:49.209Z",
+  "generatedAt": "2026-11-01T14:08:57.467Z",
   "candystore": {
     "source": "https://candystore-mcp.vercel.app/api/market",
-    "fetchedAt": "2026-09-13T18:10:46.472Z"
+    "fetchedAt": "2026-11-01T14:08:57.459Z"
   },
   "counts": {
     "stores": 5,
